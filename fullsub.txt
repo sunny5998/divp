@@ -1,0 +1,16 @@
+-------- Full Subtractor with STD_LOGIC_VECTOR: --------
+Library ieee;
+USE ieee.std_logic_1164.all;
+USE ieee.std_logic_signed.all;
+-------------------------------------------------------
+ENTITY FullSubtractor IS
+GENERIC (N: INTEGER := 16); --- number of input bits
+PORT (a,b,c: IN STD_LOGIC_VECTOR(N-1 DOWNTO 0);
+diff, bor: OUT STD_LOGIC_VECTOR(N-1 DOWNTO 0));
+END FullSubtractor;
+------------------------------------------------------
+ARCHITECTURE FullSubtractor OF FullSubtractor IS
+BEGIN
+diff <= a XOR b XOR c;
+bor <= ((NOT a AND b) OR (b AND c) OR (NOT a AND c));
+END FullSubtractor;

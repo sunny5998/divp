@@ -1,0 +1,136 @@
+binary-
+
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity binaryadd is
+    Port ( A : in  STD_LOGIC_VECTOR (3 downto 0);
+           B : in  STD_LOGIC_VECTOR (3 downto 0);
+           cin : in  STD_LOGIC;
+           s : out  STD_LOGIC_VECTOR (3 downto 0);
+           carry : out  STD_LOGIC);
+end binaryadd;
+
+architecture Behavioral of binaryadd is
+signal temp1,temp2,temp3:std_logic;
+
+component fa is 
+port( a,b,c:in std_logic;
+co:out std_logic;
+s:out std_logic);
+end component;
+
+begin
+fa0:fa port map(a=>A(0),b=>B(0),c=>cin,co=>temp1,s=>s(0));
+
+fa1:fa port map(a=>A(1),b=>B(1),c=>temp1,co=>temp2,s=>s(1));
+
+fa2:fa port map(a=>A(2),b=>B(2),c=>temp2,co=>temp3,s=>s(2));
+
+fa3:fa port map(a=>A(3),b=>B(3),c=>temp3,co=>carry,s=>s(3));
+
+end Behavioral;
+
+
+
+fa-
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity fa is
+    Port ( a : in  STD_LOGIC;
+           b : in  STD_LOGIC;
+           c : in  STD_LOGIC;
+           co : out  STD_LOGIC;
+           s : out  STD_LOGIC);
+end fa;
+
+architecture Behavioral of fa is
+
+begin
+s<=a xor b xor c;
+co<=(a and b) or (c and (a or b));
+
+end Behavioral;
+
+
+
+test bench
+
+
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+ 
+ 
+ENTITY binary_tb IS
+END binary_tb;
+ 
+ARCHITECTURE behavior OF binary_tb IS 
+ 
+    -- Component Declaration for the Unit Under Test (UUT)
+ 
+    COMPONENT binaryadd
+    PORT(
+         A : IN  std_logic_vector(3 downto 0);
+         B : IN  std_logic_vector(3 downto 0);
+         cin : IN  std_logic;
+         s : OUT  std_logic_vector(3 downto 0);
+         carry : OUT  std_logic
+        );
+    END COMPONENT;
+    
+
+   --Inputs
+   signal A : std_logic_vector(3 downto 0) := (others => '0');
+   signal B : std_logic_vector(3 downto 0) := (others => '0');
+   signal cin : std_logic := '0';
+
+ 	--Outputs
+   signal s : std_logic_vector(3 downto 0);
+   signal carry : std_logic;
+    
+BEGIN
+ 
+	-- Instantiate the Unit Under Test (UUT)
+   uut: binaryadd PORT MAP (
+          A => A,
+          B => B,
+          cin => cin,
+          s => s,
+          carry => carry
+        );
+
+  
+
+   -- Stimulus process
+   stim_proc_A: process
+   begin		
+	A<="0100";
+	 wait for 80 ns;	
+  A<="0111";
+  wait;
+    end process;
+
+   stim_proc_B: process
+     begin		
+	  B<="1111";
+	  wait for 80 ns;	
+     B<="0011";
+     wait;
+  end process;
+  
+   stim_proc_cin: process
+     begin		
+	  cin<='0';
+	 wait for 80 ns;	
+    wait;
+    end process;
+
+
+
+
+END;
